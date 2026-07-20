@@ -33,6 +33,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _loadAll() async {
+    // Inicializar API key do SharedPreferences
+    await _tmdb.initApiKey();
+    
     final trending = await _tmdb.getTrending();
     final popular = await _tmdb.getPopular();
     final topRated = await _tmdb.getTopRated();
