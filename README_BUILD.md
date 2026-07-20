@@ -45,3 +45,11 @@ Instale o app "Send Files to TV" na TV e no celular, transfira o APK e instale.
 ## ⚠️ Fontes desconhecidas
 
 Lembre-se de ativar **Fontes desconhecidas** nas configurações da TV antes de instalar.
+
+## 🔑 Configurar API key do TMDB
+
+1. Crie conta grátis em https://www.themoviedb.org/signup
+2. Vá em https://www.themoviedb.org/settings/api
+3. Copie sua API key
+4. No app, vá em **⚙️ Configurações** e cole sua key
+5. Reinicie o app para aplicar
