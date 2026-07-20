@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Cine Hub TV — Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Serif+Display&family=JetBrains+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0A0E1A;
+    --surface: #141829;
+    --card: #1E2238;
+    --accent: #E50914;
+    --gold: #FFC400;
+    --text: #FFFFFF;
+    --text-dim: #B0B3C0;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* TV Frame */
+  .tv-container {
+    min-height: 100vh;
+    padding: 40px 20px;
+    background: radial-gradient(ellipse at top, #1a1f3a 0%, var(--bg) 70%);
+  }
+
+  .tv-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .tv-header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 48px;
+    background: linear-gradient(135deg, var(--accent), #ff5050);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+  }
+  .tv-header p {
+    color: var(--text-dim);
+    font-size: 16px;
+  }
+
+  /* TV Screen */
+  .tv-screen {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: var(--bg);
+    border-radius: 24px;
+    border: 8px solid #0f1218;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 0 1px #2a2f3e inset;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .tv-screen::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: var(--accent);
+    z-index: 10;
+  }
+
+  .tv-content {
+    padding: 30px 40px;
+  }
+
+  /* App header */
+  .app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .app-logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .app-logo-icon {
+    width: 50px;
+    height: 50px;
+    background: var(--accent);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+  }
+  .app-logo h2 {
+    font-size: 28px;
+    font-weight: 800;
+  }
+  .app-actions {
+    display: flex;
+    gap: 12px;
+  }
+  .action-btn {
+    background: var(--card);
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .action-btn.focused {
+    background: var(--accent);
+    transform: scale(1.05);
+    box-shadow: 0 0 20px var(--accent);
+  }
+
+  /* Hero */
+  .hero {
+    width: 100%;
+    height: 400px;
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 32px;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    border: 2px solid transparent;
+    transition: all 0.3s;
+  }
+  .hero.focused {
+    border-color: var(--accent);
+    box-shadow: 0 0 40px rgba(229, 9, 20, 0.4);
+    transform: scale(1.01);
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(0deg, rgba(0,0,0,0.9) 0%, transparent 60%),
+      linear-gradient(90deg, rgba(0,0,0,0.85) 0%, transparent 50%);
+  }
+  .hero-content {
+    position: absolute;
+    bottom: 40px;
+    left: 40px;
+    right: 200px;
+    z-index: 2;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: var(--accent);
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 1.2px;
+    margin-bottom: 12px;
+  }
+  .hero-title {
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 12px;
+    text-shadow: 0 4px 12px rgba(0,0,0,0.8);
+  }
+  .hero-meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
+    font-size: 16px;
+  }
+  .hero-rating {
+    color: var(--gold);
+    font-weight: 700;
+  }
+  .hero-overview {
+    font-size: 15px;
+    line-height: 1.4;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 16px;
+    max-width: 600px;
+  }
+  .hero-btn {
+    background: var(--accent);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+
+  /* Section */
+  .section {
+    margin-bottom: 32px;
+  }
+  .section-title {
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 14px;
+  }
+  .row {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+  .row::-webkit-scrollbar { height: 6px; }
+  .row::-webkit-scrollbar-track { background: var(--surface); }
+  .row::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+
+  /* Movie card */
+  .movie-card {
+    flex-shrink: 0;
+    width: 160px;
+    height: 240px;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.25s;
+    border: 3px solid transparent;
+  }
+  .movie-card.focused {
+    transform: scale(1.08);
+    border-color: var(--accent);
+    box-shadow: 0 0 25px var(--accent);
+  }
+  .movie-poster {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #2a2f4a, #1a1f3a);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    color: var(--text-dim);
+    position: relative;
+  }
+  .movie-poster::after {
+    content: attr(data-title);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 12px 8px 8px;
+    background: linear-gradient(0deg, rgba(0,0,0,0.95), transparent);
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+    text-align: left;
+  }
+  .movie-rating {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(0,0,0,0.7);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    z-index: 2;
+  }
+  .movie-rating .star { color: var(--gold); font-size: 12px; }
+
+  /* Category card */
+  .cat-card {
+    flex-shrink: 0;
+    width: 220px;
+    height: 130px;
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.25s;
+    border: 3px solid transparent;
+    display: flex;
+    align-items: flex-end;
+    padding: 20px;
+  }
+  .cat-card.focused {
+    transform: scale(1.05);
+    border-color: white;
+    box-shadow: 0 0 25px currentColor;
+  }
+  .cat-card .emoji-bg {
+    position: absolute;
+    right: -10px;
+    bottom: -10px;
+    font-size: 110px;
+    opacity: 0.25;
+  }
+  .cat-card .cat-name {
+    font-size: 22px;
+    font-weight: 800;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    z-index: 2;
+  }
+  .cat-card .cat-emoji {
+    font-size: 32px;
+    margin-bottom: 8px;
+    z-index: 2;
+  }
+
+  /* Color themes for categories */
+  .acao { background: linear-gradient(135deg, #FF3D00, #b71c1c); color: #FF3D00; }
+  .comedia { background: linear-gradient(135deg, #FFC400, #ff8f00); color: #FFC400; }
+  .terror { background: linear-gradient(135deg, #6A1B9A, #4a148c); color: #6A1B9A; }
+  .romance { background: linear-gradient(135deg, #E91E63, #ad1457); color: #E91E63; }
+  .animacao { background: linear-gradient(135deg, #00BCD4, #006064); color: #00BCD4; }
+  .ficcao { background: linear-gradient(135deg, #1976D2, #0d47a1); color: #1976D2; }
+  .drama { background: linear-gradient(135deg, #455A64, #263238); color: #455A64; }
+  .suspense { background: linear-gradient(135deg, #424242, #212121); color: #424242; }
+
+  /* Mock posters with emoji */
+  .p1 { background: linear-gradient(135deg, #667eea, #764ba2); }
+  .p2 { background: linear-gradient(135deg, #f093fb, #f5576c); }
+  .p3 { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+  .p4 { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+  .p5 { background: linear-gradient(135deg, #fa709a, #fee140); }
+  .p6 { background: linear-gradient(135deg, #30cfd0, #330867); }
+  .p7 { background: linear-gradient(135deg, #a8edea, #fed6e3); color: #333; }
+  .p8 { background: linear-gradient(135deg, #ff9a9e, #fad0c4); color: #333; }
+
+  /* TV Stand */
+  .tv-stand {
+    width: 200px;
+    height: 16px;
+    background: linear-gradient(180deg, #1a1f2e, #0a0e1a);
+    margin: -8px auto 0;
+    border-radius: 0 0 12px 12px;
+  }
+
+  /* Features below */
+  .features {
+    max-width: 1400px;
+    margin: 60px auto 0;
+    padding: 0 20px;
+  }
+  .features h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px;
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .feature-card {
+    background: var(--surface);
+    border: 1px solid #2a2f3e;
+    border-radius: 16px;
+    padding: 24px;
+    transition: all 0.2s;
+  }
+  .feature-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent);
+  }
+  .feature-icon {
+    width: 48px;
+    height: 48px;
+    background: rgba(229, 9, 20, 0.1);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 14px;
+  }
+  .feature-icon svg { stroke: var(--accent); width: 24px; height: 24px; }
+  .feature-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .feature-card p {
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-dim);
+    font-size: 13px;
+  }
+
+  @media (max-width: 900px) {
+    .feature-grid { grid-template-columns: 1fr; }
+    .hero-title { font-size: 28px; }
+    .hero-content { right: 40px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="tv-container">
+  <div class="tv-header">
+    <h1>Cine Hub TV</h1>
+    <p>Preview interativo — clique nos cards pra simular foco do controle remoto</p>
+  </div>
+
+  <div class="tv-screen">
+    <div class="tv-content">
+      <!-- App header -->
+      <div class="app-header">
+        <div class="app-logo">
+          <div class="app-logo-icon">🎬</div>
+          <h2>Cine Hub TV</h2>
+        </div>
+        <div class="app-actions">
+          <div class="action-btn focused" onclick="toggleFocus(this)">🔍 Buscar</div>
+          <div class="action-btn" onclick="toggleFocus(this)">⚙️ Config</div>
+        </div>
+      </div>
+
+      <!-- Hero -->
+      <div class="hero focused" onclick="toggleFocus(this)">
+        <div class="hero-content">
+          <span class="hero-badge">DESTAQUE</span>
+          <div class="hero-title">Duna: Parte 2</div>
+          <div class="hero-meta">
+            <span class="hero-rating">★ 4.7/5</span>
+            <span style="color: rgba(255,255,255,0.6);">📅 2024</span>
+            <span style="color: rgba(255,255,255,0.6);">⏱ 2h 46min</span>
+          </div>
+          <div class="hero-overview">
+            Paul Atreides se une aos Fremen enquanto busca vingança contra os conspiradores que destruíram sua família.
+          </div>
+          <div class="hero-btn">▶ Ver detalhes</div>
+        </div>
+      </div>
+
+      <!-- Trending -->
+      <div class="section">
+        <div class="section-title">🔥 Em Alta</div>
+        <div class="row">
+          <div class="movie-card focused" onclick="toggleFocus(this)">
+            <div class="movie-rating"><span class="star">★</span> 4.5</div>
+            <div class="movie-poster p1" data-title="Oppenheimer"></div>
+          </div>
+          <div class="movie-card" onclick="toggleFocus(this)">
+            <div class="movie-rating"><span class="star">★</span> 4.3</div>
+            <div class="movie-poster p2" data-title="Barbie"></div>
+          </div>
+          <div class="movie-card" onclick="toggleFocus(this)">
+            <div class="movie-rating"><span class="star">★</span> 4.6</div>
+            <div class="movie-poster p3" data-title="Homem-Aranha"></div>
+          </div>
+          <div class="movie-card" onclick="toggleFocus(this)">
+            <div class="movie-rating"><span class="star">★</span> 4.1</div>
+            <div class="movie-poster p4" data-title="Guardiões"></div>
+          </div>
+          <div class="movie-card" onclick="toggleFocus(this)">
+            <div class="movie-rating"><span class="star">★</span> 4.4</div>
+            <div class="movie-poster p5" data-title="John Wick 4"></div>
+          </div>
+          <div class="movie-card" onclick="toggleFocus(this)">
+            <div class="movie-rating"><span class="star">★</span> 4.0</div>
+            <div class="movie-poster p6" data-title="Interestelar"></div>
+          </div>
+          <div class="movie-card" onclick="toggleFocus(this)">
+            <div class="movie-rating"><span class="star">★</span> 4.2</div>
+            <div class="movie-poster p7" data-title="Parasita"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Categories -->
+      <div class="section">
+        <div class="section-title">📂 Categorias</div>
+        <div class="row">
+          <div class="cat-card acao" onclick="toggleFocus(this)">
+            <span class="emoji-bg">💥</span>
+            <div>
+              <div class="cat-emoji">💥</div>
+              <div class="cat-name">Ação</div>
+            </div>
+          </div>
+          <div class="cat-card comedia" onclick="toggleFocus(this)">
+            <span class="emoji-bg">😂</span>
+            <div>
+              <div class="cat-emoji">😂</div>
+              <div class="cat-name">Comédia</div>
+            </div>
+          </div>
+          <div class="cat-card terror" onclick="toggleFocus(this)">
+            <span class="emoji-bg">👻</span>
+            <div>
+              <div class="cat-emoji">👻</div>
+              <div class="cat-name">Terror</div>
+            </div>
+          </div>
+          <div class="cat-card romance" onclick="toggleFocus(this)">
+            <span class="emoji-bg">💕</span>
+            <div>
+              <div class="cat-emoji">💕</div>
+              <div class="cat-name">Romance</div>
+            </div>
+          </div>
+          <div class="cat-card animacao" onclick="toggleFocus(this)">
+            <span class="emoji-bg">🎨</span>
+            <div>
+              <div class="cat-emoji">🎨</div>
+              <div class="cat-name">Animação</div>
+            </div>
+          </div>
+          <div class="cat-card ficcao" onclick="toggleFocus(this)">
+            <span class="emoji-bg">🚀</span>
+            <div>
+              <div class="cat-emoji">🚀</div>
+              <div class="cat-name">Ficção</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top rated -->
+      <div class="section">
+        <div class="section-title">⭐ Mais Bem Avaliados</div>
+        <div class="row">
+          <div class="movie-card" onclick="toggleFocus(this)">
+            <div class="movie-rating"><span class="star">★</span> 4.9</div>
+            <div class="movie-poster p2" data-title="Clube da Luta"></div>
+          </div>
+          <div class="movie-card" onclick="toggleFocus(this)">
+            <div class="movie-rating"><span class="star">★</span> 4.8</div>
+            <div class="movie-poster p4" data-title="O Poderoso Chefão"></div>
+          </div>
+          <div class="movie-card" onclick="toggleFocus(this)">
+            <div class="movie-rating"><span class="star">★</span> 4.8</div>
+            <div class="movie-poster p6" data-title="Cidadão Kane"></div>
+          </div>
+          <div class="movie-card" onclick="toggleFocus(this)">
+            <div class="movie-rating"><span class="star">★</span> 4.7</div>
+            <div class="movie-poster p1" data-title="Batman: Cavaleiro"></div>
+          </div>
+          <div class="movie-card" onclick="toggleFocus(this)">
+            <div class="movie-rating"><span class="star">★</span> 4.7</div>
+            <div class="movie-poster p3" data-title="Pulp Fiction"></div>
+          </div>
+          <div class="movie-card" onclick="toggleFocus(this)">
+            <div class="movie-rating"><span class="star">★</span> 4.7</div>
+            <div class="movie-poster p5" data-title="Forrest Gump"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tv-stand"></div>
+
+  <!-- Features -->
+  <div class="features">
+    <h2>O que vem no app</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <h3>Feito pra TV</h3>
+        <p>Layout otimizado para telas grandes. Funciona perfeito com controle remoto e D-pad.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <h3>Catálogo do TMDB</h3>
+        <p>Milhares de filmes atualizados diariamente. Mesma fonte usada por Netflix, Prime Video e Disney+.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+        </div>
+        <h3>12 Categorias</h3>
+        <p>Ação, Comédia, Terror, Romance, Animação, Ficção, Drama e muito mais — tudo bem organizado.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </div>
+        <h3>Trailers Integrados</h3>
+        <p>Veja o trailer do filme direto no app antes de decidir o que assistir.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        </div>
+        <h3>Em Português</h3>
+        <p>Catálogo, sinopse, títulos e tudo mais em pt-BR. Direto ao ponto.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3>100% Legal</h3>
+        <p>Usa a API pública do TMDB. Nada de pirataria, nada de malware. App limpo e seguro.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Cine Hub TV v1.0.0 — Hub pessoal para Android TV · Dados via The Movie Database (TMDB)
+  </div>
+</div>
+
+<script>
+  // Click qualquer card pra simular foco do controle remoto
+  function toggleFocus(el) {
+    document.querySelectorAll('.focused').forEach(e => e.classList.remove('focused'));
+    el.classList.add('focused');
+  }
+
+  // Auto-rotate: simula navegação
+  let step = 0;
+  const targets = [
+    '.hero',
+    '.movie-card',
+    '.movie-card',
+    '.cat-card',
+    '.movie-card',
+    '.action-btn',
+  ];
+
+  // Foco automático com setas (apenas demonstração)
+  document.addEventListener('keydown', (e) => {
+    // visualização apenas
+  });
+</script>
+
+</body>
+</html>
