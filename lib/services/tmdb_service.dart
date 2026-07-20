@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/movie.dart';
 
 class TmdbService {
@@ -11,6 +12,18 @@ class TmdbService {
   String _apiKey;
 
   TmdbService({String? apiKey}) : _apiKey = apiKey ?? _demoApiKey;
+
+  Future<void> initApiKey() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final savedKey = prefs.getString('tmdb_api_key');
+      if (savedKey != null && savedKey.isNotEmpty) {
+        _apiKey = savedKey;
+      }
+    } catch (e) {
+      print('Erro ao carregar API key: $e');
+    }
+  }
 
   void updateApiKey(String newKey) {
     _apiKey = newKey;
@@ -71,7 +84,6 @@ class TmdbService {
         return Movie.fromJson(json.decode(response.body));
       }
     } catch (e) {
-      // ignore: avoid_print
       print('Erro ao buscar detalhes: $e');
     }
     return null;
@@ -99,7 +111,6 @@ class TmdbService {
         }
       }
     } catch (e) {
-      // ignore: avoid_print
       print('Erro ao buscar trailer: $e');
     }
     return null;
@@ -114,7 +125,6 @@ class TmdbService {
         return results.map((j) => Movie.fromJson(j)).toList();
       }
     } catch (e) {
-      // ignore: avoid_print
       print('Erro TMDB: $e');
     }
     return [];
