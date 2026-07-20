@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 import '../models/movie.dart';
 import '../services/tmdb_service.dart';
 import '../theme/app_theme.dart';
@@ -31,11 +31,12 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
     final trailer = await _tmdb.getTrailerKey(widget.movie.id);
     if (!mounted) return;
     if (trailer != null) {
-      _ytController = YoutubePlayerController(
-        initialVideoId: trailer,
-        flags: const YoutubePlayerFlags(
-          autoPlay: false,
-          mute: false,
+      _ytController = YoutubePlayerController.fromVideoId(
+        videoId: trailer,
+        autoPlay: false,
+        params: const YoutubePlayerParams(
+          showControls: true,
+          showFullscreenButton: true,
           enableCaption: true,
         ),
       );
@@ -48,7 +49,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
 
   @override
   void dispose() {
-    _ytController?.dispose();
+    _ytController?.close();
     super.dispose();
   }
 
@@ -61,7 +62,6 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // backdrop header
             Stack(
               children: [
                 SizedBox(
@@ -120,7 +120,6 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // poster
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: CachedNetworkImage(
@@ -206,8 +205,6 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                             borderRadius: BorderRadius.circular(12),
                             child: YoutubePlayer(
                               controller: _ytController!,
-                              showVideoProgressIndicator: true,
-                              progressIndicatorColor: AppTheme.accent,
                             ),
                           ),
                         ] else if (_details != null) ...[

@@ -39,6 +39,7 @@ O app vem com uma chave de demonstração. Para ter acesso estável:
 
 - **Flutter** (Dart) — UI nativa e performática
 - **TMDB API** — catálogo oficial
+- **youtube_player_iframe** — trailers
 - **GitHub Actions** — build automatizado
 
 ## 📂 Estrutura
